@@ -13,7 +13,7 @@
 class pelicula{
 
 public:
-    pelicula(horas hIni = 0, horas dur = 0, std::string titl= 0){
+    pelicula(horas hIni = horas(0,0,0), horas dur = horas(0,0,0), std::string titl = ""){
         horaIni = hIni;
         duracion = dur;
         titulo = std::move(titl);
