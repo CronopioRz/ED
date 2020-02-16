@@ -24,11 +24,11 @@ public:
    std::string get_titulo() const{return titulo;}
    horas get_horaFin() const { return horaIni + duracion;}
 
-   bool operator< (pelicula const& peli2) const {
-        return get_horaFin() < peli2.get_horaFin();
+    bool operator< (pelicula const& peli2) const {
+        return ((get_horaFin() < peli2.get_horaFin()) || ((get_horaFin() == peli2.get_horaFin()) && (get_titulo() < peli2.get_titulo())));
     }
     bool operator== (pelicula const&peli2) const{
-        return get_horaFin() == peli2.get_horaFin();
+        return get_horaFin() == peli2.get_horaFin() && get_titulo() == peli2.get_titulo();
     }
     bool operator<= (pelicula const&peli2) const{
         return (get_horaFin() == peli2.get_horaFin())
@@ -42,6 +42,17 @@ private:
 
 
 };
+
+inline std::istream& operator>>(std::istream & in, pelicula & pelicula1) {
+    horas horainicio;
+    horas horaDur;
+    std::string titulo;
+
+    in >> horainicio >> horaDur;
+    getline(in,titulo);
+    pelicula1 = pelicula(horainicio,horaDur,titulo);
+    return in;
+}
 
 
 #endif //ED02_PELICULA_H

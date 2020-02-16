@@ -7,54 +7,83 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
+#include <iomanip>
+
+const int MAX_H_S = 60;
 
 class horas{
+    public:
+     horas(int h = 0, int m = 0, int s= 0): hora(h), minuto(m), segundo(s){ //parametros = 0 como valores por defecto
+        if (valido(h,m,s)) {
+                hora = h; minuto = m; segundo = s;
+            }
+        else { 
+                throw std::domain_error("ERROR");
+        }
+     };
 
-public:
-    horas(int h = 0, int m = 0, int s= 0){ //parametros = 0 como valores por defecto
-        if (h < 0 || h > 23 || m < 0 || m > 59 || s < 0 || s > 59)
-            throw std::invalid_argument("Error");
-        else
-            hora = h, minuto = m, segundo = s;
-    };
+     int get_hora() const { return hora;};
+     int get_minuto() const {return minuto;};
+     int get_segundo() const {return segundo;};
 
-    int get_hora() const { return hora;}
-    int get_minuto() const {return minuto;}
-    int get_segundo() const {return segundo;}
-
-    bool operator< ( horas const & h) const{
+     bool operator< ( horas const & h) const{
         return ((hora < h.get_hora()) || ( hora == h.get_hora() && minuto < h.get_minuto())||
-                (hora == h.get_hora() && minuto ==  h.get_minuto() && segundo < h.get_segundo()));
-    }
-    bool operator== (horas const& hora1) const{
+                    (hora == h.get_hora() && minuto ==  h.get_minuto() && segundo < h.get_segundo()));
+     }
+     bool operator== (horas const& hora1)const{
         return (hora == hora1.get_hora() && minuto == hora1.get_minuto() && segundo == hora1.get_segundo());
-    }
-    bool operator <=(horas const& hora1) const{
+        }
+     bool operator <=(horas const& hora1) const{
         return (*this < hora1 || *this == hora1);
-    }
-    horas operator+ (horas const&hora2) const{
-        int sumaSeg;
-        horas aux;
-        sumaSeg = horasToSegundos(hora2) + horasToSegundos(*this);
-        aux = segundosToHoras(sumaSeg);
-        return aux;
-    }
+     }
+     horas operator+(horas const& hora2)const {
+        int hvar = hora+hora2.get_hora();
+        int mvar = minuto+hora2.get_minuto();
+        int svar = segundo+hora2.get_segundo();
+        if (svar >= MAX_H_S) {mvar += svar/MAX_H_S; svar = svar%MAX_H_S;}
+        if(mvar >= MAX_H_S) {hvar += mvar/MAX_H_S; mvar = mvar %MAX_H_S;}
+        return horas(hvar, mvar, svar);
+     }
 
-private:
+        void read(std::istream & in = std::cin ) {
+            int h, m, s;
+            std::string horario;
+            in >> horario;
+            h = std::stoi(horario.substr(0,2));
+            m = std::stoi(horario.substr(3,2));
+            s =std::stoi(horario.substr(6,2));
+
+            if (valido(h,m,s)){
+                hora = h; minuto = m; segundo = s;}
+            else {
+                throw std::domain_error("ERROR");}
+        }
+
+        void print(std::ostream & out = std::cout) const{
+            out << std::setfill('0') << std::setw(2) << hora  << ':' 
+            << std::setfill('0') << std::setw(2) << minuto << ':' 
+            << std::setfill('0') << std::setw(2) << segundo;
+        }
+    private:
     int hora, minuto, segundo;
-    int horasToSegundos(horas const&h) const{
-        return (h.get_hora()*3600 + h.get_minuto()*60 + h.get_segundo());
+
+    bool valido (int h, int m, int s)const{
+        return (((0 <= h) && (h < 24)) && ((0 <= m) && (m < 60)) && ((0 <= s) && (s < 60)));
     }
 
-    horas segundosToHoras (int const& segundos) const{
-        int h,m,s;
-        h = segundos/3600;
-        m = (segundos -h*3600) / 60;
-        s = segundos - (h*3600 + m*60);
-        return horas(h,m,s);
-    }
+    
 };
 
+inline std::ostream & operator<<(std::ostream & out, horas const& h) {
+    h.print(out);
+    return out;
+}
+
+inline std::istream & operator>>(std::istream & in, horas & h){
+    h.read(in);
+    return in;
+}
 
 #endif //ED01_HORAS_
 // H
