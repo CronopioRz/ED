@@ -33,7 +33,7 @@ bool resuelveCaso() {
     if ((numTrenes  == 0 && numHoras == 0) || numTrenes > MAX_TRENES)
         return false;
     std::vector<horas> vTrenes(numTrenes);
-    
+
         for (int i = 0; i < numTrenes; i++)
             std::cin >> vTrenes[i];
         for (int i = 0; i < numHoras; i++) {
@@ -44,15 +44,15 @@ bool resuelveCaso() {
             if (pos == vTrenes.end()){
                 std::cout << "NO\n";
             }
-            else 
+            else
                 std::cout << *pos << '\n';
         }
         catch (std::domain_error &de){
          std::cout << "ERROR\n";
         }
 
-        }     
-   
+        }
+
     std::cout << "---" << std::endl;
 
 
