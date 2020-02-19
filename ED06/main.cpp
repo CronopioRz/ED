@@ -47,7 +47,6 @@ bool resolver(stack<char> datos) {
 // configuración, y escribiendo la respuesta
 bool resuelveCaso() {
     // leer los datos de la entrada
-    stack<char> charStack;
     std::string frase;
     std::getline(std::cin,frase);
     if (!std::cin)
