@@ -19,28 +19,32 @@ bool apertura (char const& aux){
 }
 
 bool balanced(char const& aux,stack<char> const&datos){
-    if(datos.empty()) return !cierre(aux);
-    else if (aux == ')') return (datos.top() == '(' || cierre(datos.top()));
-    else if (aux == ']') return (datos.top() == '[' || cierre(datos.top()));
-    else if (aux == '}') return (datos.top() == '{' || cierre(datos.top()));
-    else return apertura(aux);
+    if(datos.empty()) return false;
+    if (aux == ')') return (datos.top() == '(');
+    if (aux == ']') return (datos.top() == '[');
+    if (aux == '}') return (datos.top() == '{');
+    return true;
 }
 
 
 // función que resuelve el problema
-bool resolver(stack<char> datos) {
-    char aux;
+bool resolver(std::string frase) {
     bool equil = true;
-   
-    while(equil && !datos.empty()) {
-        aux = datos.top();
-        datos.pop();
-        if (!balanced(aux,datos) ){
-            equil = false;
+    stack<char> stack;
+    int tam = frase.length();
+    int i = 0;
+
+    while(i < tam && equil){
+        if(apertura(frase[i]))
+            stack.push(frase[i]);
+        else if(cierre(frase[i])){
+            equil = balanced(frase[i],stack);
+            if(!stack.empty())
+             stack.pop();
         }
-        
+        i++;
     }
-    return equil;
+    return equil && stack.empty();
 }
 
 // Resuelve un caso de prueba, leyendo de la entrada la
@@ -51,11 +55,7 @@ bool resuelveCaso() {
     std::getline(std::cin,frase);
     if (!std::cin)
         return false;
-    for(char &c: frase){
-        if(correct(c))
-            charStack.push(c);
-    }
-    if(resolver(charStack))
+    if(resolver(frase))
         std::cout << "SI" << std::endl;
     else 
         std::cout << "NO" << std::endl;
