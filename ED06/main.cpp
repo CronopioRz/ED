@@ -7,28 +7,42 @@
 #include <fstream>
 #include "stack.h"
 
+bool correct(char const& simbol) {
+        return simbol == '(' || simbol  == ')' || simbol == '[' || simbol == ']' || simbol == '{' || simbol == '}';
+}
+
+bool cierre(char const& aux){
+    return ((aux == ']') || (aux == ')') || (aux == '}'));
+}
+bool apertura (char const& aux){
+    return ((aux == '[') || (aux == '(') || (aux == '{'));
+}
+
+bool balanced(char const& aux,stack<char> const&datos){
+    if(datos.empty()) return !cierre(aux);
+    else if (aux == ')') return (datos.top() == '(' || cierre(datos.top()));
+    else if (aux == ']') return (datos.top() == '[' || cierre(datos.top()));
+    else if (aux == '}') return (datos.top() == '{' || cierre(datos.top()));
+    else return apertura(aux);
+}
+
 
 // función que resuelve el problema
 bool resolver(stack<char> datos) {
     char aux;
     bool equil = true;
-    aux = datos.top();
-    datos.pop();
+   
     while(equil && !datos.empty()) {
-        if (aux == ')' && datos.top() != '(' || aux == ']' && datos.top() != '[' || aux == '}' && datos.top() != '{'){
+        aux = datos.top();
+        datos.pop();
+        if (!balanced(aux,datos) ){
             equil = false;
         }
-        else {
-            aux = datos.top();
-            datos.pop();
-        }
-        return equil;
+        
     }
-    
+    return equil;
 }
-bool correct(char const& simbol) {
-        return simbol == '(' || simbol  == ')' || simbol == '[' || simbol == ']' || simbol == '{' || simbol == '}';
-}
+
 // Resuelve un caso de prueba, leyendo de la entrada la
 // configuración, y escribiendo la respuesta
 bool resuelveCaso() {
