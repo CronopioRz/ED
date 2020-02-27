@@ -27,7 +27,7 @@ inline std::istream & operator>>(std::istream & in, flight & f){
 
 bool resuelveCaso() {
     // leer los datos de la entrada
-    
+
     int numCasos;
     std::cin >> numCasos;
     if(!std::cin )
@@ -35,7 +35,7 @@ bool resuelveCaso() {
     flight aux;
     stack<flight> pila;
     for (int i = 0; i < numCasos; ++i){
-        
+
         bool found = false;
         std::cin >> aux;
         while(!pila.empty() && !found) {
@@ -65,17 +65,17 @@ int main() {
     #ifndef DOMJUDGE
      std::ifstream in("datos.txt");
      auto cinbuf = std::cin.rdbuf(in.rdbuf()); //save old buf and redirect std::cin to casos.txt
-     #endif 
-     
+     #endif
+
       while (resuelveCaso())
         ;
 
-    
+
     // Para restablecer entrada. Comentar para acepta el reto
      #ifndef DOMJUDGE // para dejar todo como estaba al principio
      std::cin.rdbuf(cinbuf);
-    
+
      #endif
-    
+
     return 0;
 }
