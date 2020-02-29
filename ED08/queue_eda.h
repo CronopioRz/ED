@@ -15,7 +15,7 @@
 #define queue_eda_h
 
 #include <stdexcept>  // std::domain_error
-
+#include <iostream>
 template <class T>
 class queue {
 protected:
@@ -103,7 +103,7 @@ public:
    int size() const {
       return nelems;
    }
-
+    
 protected:
 
    void libera() {
@@ -134,5 +134,6 @@ protected:
       }
    }
 };
+
 
 #endif // queue_eda_hi

@@ -2,30 +2,17 @@
 // Usuario del Juez ......
 
 
-#include <iostream>
 #include <iomanip>
 #include <fstream>
-#include "queue_eda.h"
+#include "lista_duplica.h"
 
 
-void duplica(queue<int> &cola){
-    queue<int> aux;
-    while(!cola.empty()){
-         aux.push(cola.front());
-         std::cout << aux.front() << " ";
-         aux.push(cola.front());
-         std::cout << aux.front() << " ";
-         cola.pop();
-    }
-    std::cout << std::endl;
-    cola = aux;
-}
 
 // Resuelve un caso de prueba, leyendo de la entrada la
 // configuración, y escribiendo la respuesta
 bool resuelveCaso() {
     // leer los datos de la entrada
-    queue<int> cola;
+    ListaDuplica<int> cola;
     int elem;
     std::cin >> elem;
     if (! std::cin)
@@ -37,8 +24,8 @@ bool resuelveCaso() {
     }
 
     // escribir sol
-    duplica(cola);
-
+    cola.duplica();
+    std::cout << cola << std::endl;
     return true;
 
 }
