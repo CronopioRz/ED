@@ -4,7 +4,7 @@
 
 #include <iomanip>
 #include <fstream>
-#include "lista_invierte.h"
+#include "lista_inserta.h"
 
 
 
@@ -12,20 +12,28 @@
 // configuración, y escribiendo la respuesta
 bool resuelveCaso() {
     // leer los datos de la entrada
-    ListaInvierte<int> cola;
-    int elem;
-    std::cin >> elem;
+    ListaInserta<int> cPrin;
+    ListaInserta<int> cAux;
+    int nElem, val, posInsrt;
+    std::cin >> nElem;
     if (! std::cin)
         return false;
     /*Creamos la cola con los elementos en el buffer*/
-    while(elem != 0){
-       cola.push(elem);
-       std::cin >> elem;
+    for(int i =0; i < nElem; i++){
+       std::cin >> val;
+       cPrin.push(val);
+    }
+    std::cin >> nElem;
+    std::cin >> posInsrt;
+    for(int i = 0; i < nElem; i++) {
+        std::cin >>val;
+        cAux.push(val);
     }
 
+
     // escribir sol
-    cola.invierte();
-    std::cout << cola << std::endl;
+    cPrin.inserta(cAux, posInsrt);
+    std::cout << cPrin << std::endl;
     return true;
 
 }
@@ -39,9 +47,9 @@ int main() {
      #endif
 
 
+
     while (resuelveCaso())
         ;
-
 
     // Para restablecer entrada. Comentar para acepta el reto
      #ifndef DOMJUDGE // para dejar todo como estaba al principio
