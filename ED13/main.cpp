@@ -40,12 +40,12 @@ class deque_short : public deque<T> {
                     auxAnt->sig = auxPos;
                     auxPos->ant = auxAnt;
                     //Movemos el elemento libre al final de la cola
-                    auxAnt = this->fantasma->ant;
-                    //Conectamos los nodos finales con el introducido
-                    nodoPrin->sig = this->fantasma;
-                    nodoPrin->ant = auxAnt;
-                    auxAnt->sig = nodoPrin;
-                    this->fantasma->ant = nodoPrin;
+                    auxAnt = this->fantasma->sig;
+                    //Conectamos los nodos iniciales con el elemento
+                    nodoPrin->ant = this->fantasma;
+                    nodoPrin->sig = auxAnt;
+                    auxAnt->ant = nodoPrin;
+                    this->fantasma->sig = nodoPrin;
                     //Continuamos en el siguiente elemento
                     nodoPrin = auxPos;
                 }
@@ -71,7 +71,6 @@ bool resuelveCaso() {
     //TipoSolucion sol = resolver(datos);
     
     // escribir sol
-    dq.print();
     dq.shorting();
     dq.print();
     
