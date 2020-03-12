@@ -18,15 +18,16 @@ class ListaDuplica : public queue<T> {
 
         //duplicar los nodos de una lista enlazada simple
         void duplica() {
-            ListaDuplica<T> aux;
-            int i = 0;
-            while(!this->empty()) {
-               aux.push(this->front());
-               if(i % 2 != 0)
-                  this->pop();
-               i++;
+            Nodo * nodo1 = this->prim;
+            Nodo * aux;
+            while(nodo1 != nullptr){
+                aux = new Nodo(nodo1->elem);
+                aux->sig = nodo1->sig;
+                nodo1->sig = aux;
+                nodo1 = aux->sig;
             }
-            this->copia(aux);
+            this->ult = aux;
+            this->nelems += this->nelems;
         }
 
         friend std::ostream & operator<<(std::ostream & out, ListaDuplica<T> const& l) {
