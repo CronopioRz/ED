@@ -3,7 +3,7 @@
 #include <fstream>
 
 template <class T> 
-class ListaMezcla : public queue<T> {
+class Lista : public queue<T> {
     //Para poder renombrar un nodo 
     using Nodo = typename queue<T>::Nodo;
     public:
