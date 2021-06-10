@@ -6,7 +6,7 @@
  *         Universidad Complutense de Madrid
  * ---------------------------------------------------
  */
- 
+
 /*
  * MUY IMPORTANTE: Para realizar este ejercicio solo podéis
  * modificar el código contenido entre las etiquetas <answer>
@@ -40,12 +40,15 @@
  */
 
 template <typename K, typename V, typename ComparatorFunction = std::less<K>>
-class MapTree {
+class MapTree
+{
 private:
-  template <typename S> class iterator_gen;
+  template <typename S>
+  class iterator_gen;
 
 public:
-  struct MapEntry {
+  struct MapEntry
+  {
     const K key;
     V value;
 
@@ -63,31 +66,37 @@ public:
       : num_elems(other.num_elems), root_node(copy_nodes(other.root_node)) {}
   ~MapTree() { delete_nodes(root_node); }
 
-  void insert(const MapEntry &entry) {
+  void insert(const MapEntry &entry)
+  {
     auto [new_root, inserted] = insert(root_node, entry);
     this->root_node = new_root;
-    if (inserted) {
+    if (inserted)
+    {
       num_elems++;
     }
   }
 
-  bool contains(const K &key) const {
+  bool contains(const K &key) const
+  {
     return search(root_node, key) != nullptr;
   }
 
-  const V &at(const K &key) const {
+  const V &at(const K &key) const
+  {
     Node *result = search(root_node, key);
     assert(result != nullptr);
     return result->entry.value;
   }
 
-  V &at(const K &key) {
+  V &at(const K &key)
+  {
     Node *result = search(root_node, key);
     assert(result != nullptr);
     return result->entry.value;
   }
 
-  V &operator[](const K &key) {
+  V &operator[](const K &key)
+  {
     auto [inserted, new_root, found_node] = search_or_insert(root_node, key);
     this->root_node = new_root;
     if (inserted)
@@ -95,10 +104,12 @@ public:
     return found_node->entry.value;
   }
 
-  void erase(const K &key) {
+  void erase(const K &key)
+  {
     auto [new_root, erased] = erase(root_node, key);
     this->root_node = new_root;
-    if (erased) {
+    if (erased)
+    {
       num_elems--;
     }
   }
@@ -106,8 +117,10 @@ public:
   int size() const { return num_elems; }
   bool empty() const { return num_elems == 0; }
 
-  MapTree &operator=(const MapTree &other) {
-    if (this != &other) {
+  MapTree &operator=(const MapTree &other)
+  {
+    if (this != &other)
+    {
       num_elems = other.num_elems;
       delete_nodes(root_node);
       root_node = copy_nodes(other.root_node);
@@ -115,7 +128,8 @@ public:
     return *this;
   }
 
-  void display(std::ostream &out) const {
+  void display(std::ostream &out) const
+  {
     out << "{";
     display(root_node, out);
     out << "}";
@@ -134,7 +148,8 @@ public:
   const_iterator cend() { return const_iterator(); }
 
 private:
-  struct Node {
+  struct Node
+  {
     MapEntry entry;
     Node *left, *right;
 
@@ -146,16 +161,20 @@ private:
   int num_elems;
   ComparatorFunction less_than;
 
-  template <typename S> class iterator_gen {
+  template <typename S>
+  class iterator_gen
+  {
   public:
-    S &operator*() const {
+    S &operator*() const
+    {
       assert(!st.empty());
       return st.top()->entry;
     }
 
     S *operator->() const { return &operator*(); }
 
-    iterator_gen &operator++() {
+    iterator_gen &operator++()
+    {
       assert(!st.empty());
       Node *top = st.top();
       st.pop();
@@ -163,7 +182,8 @@ private:
       return *this;
     }
 
-    iterator_gen operator++(int) {
+    iterator_gen operator++(int)
+    {
       iterator_gen previous = *this;
       ++(*this);
       return previous;
@@ -171,7 +191,8 @@ private:
 
     bool operator==(const iterator_gen &other) { return st == other.st; }
 
-    bool operator!=(const iterator_gen &other) {
+    bool operator!=(const iterator_gen &other)
+    {
       return !this->operator==(other);
     }
 
@@ -184,92 +205,132 @@ private:
 
     std::stack<Node *> st;
 
-    static void descend_and_push(Node *node, std::stack<Node *> &st) {
+    static void descend_and_push(Node *node, std::stack<Node *> &st)
+    {
       Node *current = node;
-      while (current != nullptr) {
+      while (current != nullptr)
+      {
         st.push(current);
         current = current->left;
       }
     }
   };
 
-  static Node *copy_nodes(const Node *node) {
-    if (node == nullptr) {
+  static Node *copy_nodes(const Node *node)
+  {
+    if (node == nullptr)
+    {
       return nullptr;
-    } else {
+    }
+    else
+    {
       return new Node(copy_nodes(node->left), node->entry,
                       copy_nodes(node->right));
     }
   }
 
-  static void delete_nodes(const Node *node) {
-    if (node != nullptr) {
+  static void delete_nodes(const Node *node)
+  {
+    if (node != nullptr)
+    {
       delete_nodes(node->left);
       delete_nodes(node->right);
       delete node;
     }
   }
 
-  std::pair<Node *, bool> insert(Node *root, const MapEntry &elem) {
-    if (root == nullptr) {
+  std::pair<Node *, bool> insert(Node *root, const MapEntry &elem)
+  {
+    if (root == nullptr)
+    {
       return {new Node(nullptr, elem, nullptr), true};
-    } else if (less_than(elem.key, root->entry.key)) {
+    }
+    else if (less_than(elem.key, root->entry.key))
+    {
       auto [new_root_left, inserted] = insert(root->left, elem);
       root->left = new_root_left;
       return {root, inserted};
-    } else if (less_than(root->entry.key, elem.key)) {
+    }
+    else if (less_than(root->entry.key, elem.key))
+    {
       auto [new_root_right, inserted] = insert(root->right, elem);
       root->right = new_root_right;
       return {root, inserted};
-    } else {
+    }
+    else
+    {
       return {root, false};
     }
   }
 
-  std::tuple<bool, Node *, Node *> search_or_insert(Node *root, const K &key) {
-    if (root == nullptr) {
+  std::tuple<bool, Node *, Node *> search_or_insert(Node *root, const K &key)
+  {
+    if (root == nullptr)
+    {
       Node *new_node = new Node(nullptr, {key}, nullptr);
       return {true, new_node, new_node};
-    } else if (less_than(key, root->entry.key)) {
+    }
+    else if (less_than(key, root->entry.key))
+    {
       auto [inserted, new_root, found_node] = search_or_insert(root->left, key);
       root->left = new_root;
       return {inserted, root, found_node};
-    } else if (less_than(root->entry.key, key)) {
+    }
+    else if (less_than(root->entry.key, key))
+    {
       auto [inserted, new_root, found_node] =
           search_or_insert(root->right, key);
       root->right = new_root;
       return {inserted, root, found_node};
-    } else {
+    }
+    else
+    {
       return {false, root, root};
     }
   }
 
-  std::pair<Node *, bool> erase(Node *root, const K &key) {
-    if (root == nullptr) {
+  std::pair<Node *, bool> erase(Node *root, const K &key)
+  {
+    if (root == nullptr)
+    {
       return {root, false};
-    } else if (less_than(key, root->entry.key)) {
+    }
+    else if (less_than(key, root->entry.key))
+    {
       auto [new_root_left, erased] = erase(root->left, key);
       root->left = new_root_left;
       return {root, erased};
-    } else if (less_than(root->entry.key, key)) {
+    }
+    else if (less_than(root->entry.key, key))
+    {
       auto [new_root_right, erased] = erase(root->right, key);
       root->right = new_root_right;
       return {root, erased};
-    } else {
+    }
+    else
+    {
       return {remove_root(root), true};
     }
   }
 
-  static Node *remove_root(Node *root) {
+  static Node *remove_root(Node *root)
+  {
     Node *left_child = root->left, *right_child = root->right;
     delete root;
-    if (left_child == nullptr && right_child == nullptr) {
+    if (left_child == nullptr && right_child == nullptr)
+    {
       return nullptr;
-    } else if (left_child == nullptr) {
+    }
+    else if (left_child == nullptr)
+    {
       return right_child;
-    } else if (right_child == nullptr) {
+    }
+    else if (right_child == nullptr)
+    {
       return left_child;
-    } else {
+    }
+    else
+    {
       auto [lowest, new_right_root] = remove_lowest(right_child);
       lowest->left = left_child;
       lowest->right = new_right_root;
@@ -277,37 +338,53 @@ private:
     }
   }
 
-  static std::pair<Node *, Node *> remove_lowest(Node *root) {
+  static std::pair<Node *, Node *> remove_lowest(Node *root)
+  {
     assert(root != nullptr);
-    if (root->left == nullptr) {
+    if (root->left == nullptr)
+    {
       return {root, root->right};
-    } else {
+    }
+    else
+    {
       auto [removed_node, new_root_left] = remove_lowest(root->left);
       root->left = new_root_left;
       return {removed_node, root};
     }
   }
 
-  Node *search(Node *root, const K &key) const {
-    if (root == nullptr) {
+  Node *search(Node *root, const K &key) const
+  {
+    if (root == nullptr)
+    {
       return nullptr;
-    } else if (less_than(key, root->entry.key)) {
+    }
+    else if (less_than(key, root->entry.key))
+    {
       return search(root->left, key);
-    } else if (less_than(root->entry.key, key)) {
+    }
+    else if (less_than(root->entry.key, key))
+    {
       return search(root->right, key);
-    } else {
+    }
+    else
+    {
       return root;
     }
   }
 
-  static void display(Node *root, std::ostream &out) {
-    if (root != nullptr) {
-      if (root->left != nullptr) {
+  static void display(Node *root, std::ostream &out)
+  {
+    if (root != nullptr)
+    {
+      if (root->left != nullptr)
+      {
         display(root->left, out);
         out << ", ";
       }
       out << root->entry.key << " -> " << root->entry.value;
-      if (root->right != nullptr) {
+      if (root->right != nullptr)
+      {
         out << ", ";
         display(root->right, out);
       }
@@ -316,12 +393,12 @@ private:
 };
 
 template <typename K, typename V>
-std::ostream &operator<<(std::ostream &out, const MapTree<K, V> &map) {
+std::ostream &operator<<(std::ostream &out, const MapTree<K, V> &map)
+{
   map.display(out);
   return out;
 }
- 
- 
+
 using namespace std;
 
 // --------------------------------------------------------------
@@ -331,37 +408,104 @@ using namespace std;
 // Puedes definir las funciones auxiliares que creas.
 // No está permitido modificar la clase MapTree.
 
+void mostrar(const MapTree<int, int> &map)
+{
+  for (const auto kv : map)
+  {
+    if (kv.value == -1)
+    {
+      cout << kv.key << " " << "JEFE"  << endl;
+    }
+    else
+    {
+      cout << kv.key << " " << kv.value << endl;
+    }
+  }
+  cout << "---" << endl;
+}
 
-bool tratar_caso() {
+void insert_employee(MapTree<int, int> &map, int &size, int &nDesp, int nPersonas, bool isBoss)
+{
+
+  if (nPersonas > 0)
+  {
+    //En caso de no ser un jefe en la posición a insertar
+    if (map[nDesp] != -1)
+    {
+      //Si no hay que insertar un jefe
+      if (!isBoss)
+      {
+        //Calculamos puestos libres
+        int libres = size - map[nDesp];
+        //Calculamos si caben las personas a insertar
+        int asignar = min(nPersonas, libres);
+        //Insertamos aquellos que quepan en el despacho
+        map[nDesp] += asignar;
+        //El resto se irán al siguiente despacho
+        nPersonas -= asignar;
+      }
+      else
+      { //En el caso de insertar un jefe
+        if (map[nDesp] != -1)
+        {
+          isBoss = false;
+        }
+        else
+        {
+          isBoss = true;
+        }
+        nPersonas = map[nDesp];
+        map[nDesp] = -1;
+      }
+    }
+    nDesp++;
+    return insert_employee(map, size, nDesp, nPersonas, isBoss);
+  }
+}
+
+bool tratar_caso()
+{
   // Función que lee y procesa un caso de prueba
   //
   int officeSize, nEmpl, nDir;
   std::cin >> officeSize >> nEmpl >> nDir;
-  if (officeSize == 0 && nEmpl == 0 && nDir == 0){
+  if (officeSize == 0 && nEmpl == 0 && nDir == 0)
+  {
     return false;
   }
   // Si lee la marca de fin de entrada (tres ceros), ha de devolver false
   // En caso contrario, devuelve true
   int aux;
-  MapTree<int,int,int> officeMap();
-  for (int i = 0; i < nEmpl; i++){
+  MapTree<int, int> officeMap;
+  //Insertamos los empleados de menor a mayor rango
+  for (int i = 0; i < nEmpl; i++)
+  {
     cin >> aux;
+    insert_employee(officeMap, officeSize, aux, 1, false);
   }
-  
-}
+  for (int i = 0; i < nDir; i++)
+  {
+    cin >> aux;
+    insert_employee(officeMap, officeSize, aux, 1, true);
+  }
+  mostrar(officeMap);
 
+  return true;
+}
 
 //@ </answer>
 // --------------------------------------------------------------
 
-
-int main() {
+int main()
+{
 #ifndef DOMJUDGE
   std::ifstream in("sample.in");
   auto cinbuf = std::cin.rdbuf(in.rdbuf());
 #endif
-  
-  while (tratar_caso()) {  }
+
+  while (tratar_caso())
+  {
+  }
 
 #ifndef DOMJUDGE
   std::cin.rdbuf(cinbuf);
